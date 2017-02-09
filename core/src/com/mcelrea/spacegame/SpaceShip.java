@@ -25,6 +25,21 @@ public class SpaceShip {
         collisionRect.setY(y); //move collision rect up
     }
 
+    public void moveDown() {
+        y -= speed; //move graphic up
+        collisionRect.setY(y); //move collision rect up
+    }
+
+    public void moveLeft() {
+        x -= speed; //move graphic up
+        collisionRect.setX(x); //move collision rect up
+    }
+
+    public void moveRight() {
+        x += speed; //move graphic up
+        collisionRect.setX(x); //move collision rect up
+    }
+
     public void drawDebug(ShapeRenderer shapeRenderer) {
         shapeRenderer.rect(collisionRect.x,
                 collisionRect.y,

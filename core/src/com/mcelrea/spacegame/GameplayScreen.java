@@ -63,6 +63,15 @@ public class GameplayScreen implements Screen {
         if(Gdx.input.isKeyPressed(Input.Keys.W)) {
             player.moveUp();
         }
+        if(Gdx.input.isKeyPressed(Input.Keys.S)) {
+            player.moveDown();
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.A)) {
+            player.moveLeft();
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.D)) {
+            player.moveRight();
+        }
     }
 
     private void clearScreen() {
