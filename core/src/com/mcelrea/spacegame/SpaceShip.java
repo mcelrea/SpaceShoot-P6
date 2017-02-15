@@ -1,6 +1,8 @@
 package com.mcelrea.spacegame;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -13,7 +15,7 @@ public class SpaceShip {
     private static float COLLISION_RECT_WIDTH=30;
     private static float COLLISION_RECT_HEIGHT=30;
     private Rectangle collisionRect;
-    private float speed = 7;
+    private float speed = 1;
     private static final int SINGLE=1, DOUBLE=2;
     private int currentWeapon = DOUBLE;
     private long shootDelay = 600; //1000 = 1 second
@@ -23,6 +25,8 @@ public class SpaceShip {
     private TextureRegion rightImage;
     public static final int LEFT = 1, MIDDLE = 2, RIGHT = 3;
     private int dir = MIDDLE;
+    ParticleEffect engine1;
+    ParticleEffect engine2;
 
     public SpaceShip() {
         lastShot = System.currentTimeMillis();
@@ -37,6 +41,22 @@ public class SpaceShip {
         leftImage = regions[0];
         middleImage = regions[1];
         rightImage = regions[2];
+        engine1 = new ParticleEffect();
+        engine1.load(Gdx.files.internal("engine.effect"),
+                Gdx.files.internal(""));
+        engine1.getEmitters().first().setPosition(x,y);
+        engine1.start();
+
+        engine2 = new ParticleEffect();
+        engine2.load(Gdx.files.internal("engine.effect"),
+                Gdx.files.internal(""));
+        engine2.getEmitters().first().setPosition(x,y);
+        engine2.start();
+    }
+
+    public void update(float delta) {
+        engine1.update(delta);
+        engine2.update(delta);
     }
 
     public void moveUp() {
@@ -67,6 +87,10 @@ public class SpaceShip {
     }
 
     public void draw(SpriteBatch batch) {
+
+        engine1.draw(batch);
+        engine2.draw(batch);
+
         if(dir == MIDDLE) {
             batch.draw(middleImage, x - 5, y - 3);
         }
@@ -109,5 +133,18 @@ public class SpaceShip {
 
     public void setDir(int dir) {
         this.dir = dir;
+
+        if(dir == MIDDLE) {
+            engine1.setPosition(x + 4, y + 3);
+            engine2.setPosition(x + COLLISION_RECT_WIDTH - 5, y + 3);
+        }
+        else if(dir == LEFT) {
+            engine1.setPosition(x + 4, y + 3);
+            engine2.setPosition(x + COLLISION_RECT_WIDTH - 12, y + 3);
+        }
+        else if(dir == RIGHT) {
+            engine1.setPosition(x + 11, y + 3);
+            engine2.setPosition(x + COLLISION_RECT_WIDTH - 5, y + 3);
+        }
     }
 }

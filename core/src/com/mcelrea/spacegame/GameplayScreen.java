@@ -72,6 +72,9 @@ public class GameplayScreen implements Screen {
             playerBullets.get(i).update(delta);
         }
         removeBulletsOffScreen();
+
+        //update player
+        player.update(delta);
     }
 
     //creative name
