@@ -25,6 +25,7 @@ public class GameplayScreen implements Screen {
     private Viewport viewport; //control the view of the world
     private SpaceShip player;
     Array<Bullet> playerBullets = new Array<Bullet>();
+    Enemy tempEnemy;
 
     public GameplayScreen(MyGdxGame myGdxGame) {
     }
@@ -39,6 +40,7 @@ public class GameplayScreen implements Screen {
         shapeRenderer.setAutoShapeType(true);
         batch = new SpriteBatch();
         player = new SpaceShip();
+        tempEnemy = new Enemy(400,500);
     }
 
     @Override
@@ -58,6 +60,7 @@ public class GameplayScreen implements Screen {
         shapeRenderer.setTransformMatrix(camera.view);
         //all graphics drawing goes here
         shapeRenderer.begin();
+        tempEnemy.drawDebug(shapeRenderer);
         for(int i=0; i < playerBullets.size; i++) {
             playerBullets.get(i).drawDebug(shapeRenderer);
         }
@@ -75,6 +78,9 @@ public class GameplayScreen implements Screen {
 
         //update player
         player.update(delta);
+
+        //update enemies
+        tempEnemy.act(delta, playerBullets);
     }
 
     //creative name
