@@ -25,7 +25,8 @@ public class GameplayScreen implements Screen {
     private Viewport viewport; //control the view of the world
     private SpaceShip player;
     Array<Bullet> playerBullets = new Array<Bullet>();
-    Enemy tempEnemy;
+    Array<Bullet> enemyBullets = new Array<Bullet>();
+    Array<EnemyWave> enemyWaves = new Array<EnemyWave>();
 
     public GameplayScreen(MyGdxGame myGdxGame) {
     }
@@ -40,7 +41,7 @@ public class GameplayScreen implements Screen {
         shapeRenderer.setAutoShapeType(true);
         batch = new SpriteBatch();
         player = new SpaceShip();
-        tempEnemy = new Enemy(400,500);
+        enemyWaves.add(new EnemyWave(600,0));
     }
 
     @Override
@@ -60,9 +61,14 @@ public class GameplayScreen implements Screen {
         shapeRenderer.setTransformMatrix(camera.view);
         //all graphics drawing goes here
         shapeRenderer.begin();
-        tempEnemy.drawDebug(shapeRenderer);
+        for(int i=0; i < enemyWaves.size; i++) {
+            enemyWaves.get(i).drawDebug(shapeRenderer);
+        }
         for(int i=0; i < playerBullets.size; i++) {
             playerBullets.get(i).drawDebug(shapeRenderer);
+        }
+        for(int i=0; i < enemyBullets.size; i++) {
+            enemyBullets.get(i).drawDebug(shapeRenderer);
         }
         player.drawDebug(shapeRenderer);
         shapeRenderer.end();
@@ -70,17 +76,33 @@ public class GameplayScreen implements Screen {
 
     //3 times
     private void update(float delta) {
-        //move all the player bullets
+        //move all the bullets
         for(int i=0; i < playerBullets.size; i++) {
             playerBullets.get(i).update(delta);
         }
+        for(int i=0; i < enemyBullets.size; i++) {
+            enemyBullets.get(i).update(delta);
+        }
+        checkForEnemyCollision();
         removeBulletsOffScreen();
 
         //update player
         player.update(delta);
 
         //update enemies
-        tempEnemy.act(delta, playerBullets);
+        for(int i=0; i < enemyWaves.size; i++) {
+            enemyWaves.get(i).act(delta,enemyBullets);
+        }
+    }
+
+    private void checkForEnemyCollision() {
+        //for every player bullet
+        for(int i=0; i < playerBullets.size; i++) {
+            //for every enemyWave
+            for(int j=0; j < enemyWaves.size; j++) {
+                enemyWaves.get(j).checkForHit(playerBullets.get(i));
+            }
+        }
     }
 
     //creative name
@@ -93,18 +115,46 @@ public class GameplayScreen implements Screen {
                 i--;
             }
             //bottom
-            if(b.getY() + b.getDiameter() < 0) {
+            else if(b.getY() + b.getDiameter() < 0) {
                 playerBullets.removeIndex(i);
                 i--;
             }
             //left
-            if(b.getX() + b.getDiameter() < 0) {
+            else if(b.getX() + b.getDiameter() < 0) {
                 playerBullets.removeIndex(i);
                 i--;
             }
             //right
-            if(b.getX() > WORLD_WIDTH) {
+            else if(b.getX() > WORLD_WIDTH) {
                 playerBullets.removeIndex(i);
+                i--;
+            }
+            else if(b.isAlive() == false) {
+                playerBullets.removeIndex(i);
+                i--;
+            }
+        }
+
+        for(int i=0; i < enemyBullets.size; i++) {
+            Bullet b = enemyBullets.get(i);
+            //top
+            if(b.getY() > WORLD_HEIGHT) {
+                enemyBullets.removeIndex(i);
+                i--;
+            }
+            //bottom
+            else if(b.getY() + b.getDiameter() < 0) {
+                enemyBullets.removeIndex(i);
+                i--;
+            }
+            //left
+            else if(b.getX() + b.getDiameter() < 0) {
+                enemyBullets.removeIndex(i);
+                i--;
+            }
+            //right
+            else if(b.getX() > WORLD_WIDTH) {
+                enemyBullets.removeIndex(i);
                 i--;
             }
         }

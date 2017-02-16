@@ -10,6 +10,7 @@ public class Bullet {
     private Circle collision_circle;
     private float xvel; //x-velocity
     private float yvel; //y-velocity
+    private boolean alive = true;
 
     public Bullet(float x, float y) {
         this.x = x;
@@ -46,5 +47,17 @@ public class Bullet {
 
     public float getDiameter() {
         return COLLISION_RADIUS*2;
+    }
+
+    public Circle getCollision_circle() {
+        return collision_circle;
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
     }
 }

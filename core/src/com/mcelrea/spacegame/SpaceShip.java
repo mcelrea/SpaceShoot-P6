@@ -15,7 +15,7 @@ public class SpaceShip {
     private static float COLLISION_RECT_WIDTH=30;
     private static float COLLISION_RECT_HEIGHT=30;
     private Rectangle collisionRect;
-    private float speed = 1;
+    private float speed = 6;
     private static final int SINGLE=1, DOUBLE=2;
     private int currentWeapon = DOUBLE;
     private long shootDelay = 600; //1000 = 1 second
